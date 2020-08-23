@@ -1,0 +1,8 @@
+@import "~bootstrap/scss/bootstrap";
+
+header{position: sticky;top: 0;z-index: 1020;width: 100%;}
+footer{font-size: 12px;}
+footer a:link, footer a:visited, footer a:hover, footer a:active {color:white;}
+.sidebar a:link, .sidebar a:visited, .sidebar a:hover, .sidebar a:active {color:silver;}
+.sidebar{position: sticky;top: 56px;}
+.card{font-size:12px;}
