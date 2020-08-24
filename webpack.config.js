@@ -3,8 +3,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   watchOptions: {
-    aggregateTimeout: 1000,
-    poll: 5000,
+    aggregateTimeout: 200,
+    poll: 1000,
     ignored: ['node_modules']
   },
   devServer: {
