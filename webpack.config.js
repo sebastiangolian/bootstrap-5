@@ -1,52 +1,67 @@
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  watchOptions: {
-    aggregateTimeout: 200,
-    poll: 1000,
-    ignored: ['node_modules']
-  },
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 9000
-  },
-  entry: './src/app.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
-  },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        path.resolve(__dirname, 'src'),
-      ],
-      options: {
-        concurrency: 100,
-      },
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.(scss)$/,
-        use: [
-          "style-loader",
-          "css-loader",
-          "sass-loader",
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: function () {
-                return [
-                  require('autoprefixer')
-                ];
-              }
-            }
-          },
+    entry: {
+        vendor: './src/vendor.js',
+        main: './src/main.js'
+    },
+    output: {
+        filename: './js/[name].[hash].js',
+    },  
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader"
+                }
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: 'html-loader',
+                        options: {
+                          minimize: false,
+                        },
+                    }
+                ]
+            },
+            {
+                test: /\.(png|svg|jpg|gif|ico)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[hash].[ext]',
+                        outputPath: 'images'
+                    }
+                }
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader"
+                ]
+            },
         ]
-      },
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        new HtmlWebPackPlugin({
+            template: "./src/index.html",
+            filename: "./index.html",
+            favicon: "./src/favicon.ico",
+            minify: false
+        }),
+        new MiniCssExtractPlugin({
+            filename: "./css/[name].[hash].css",
+            chunkFilename: "[id].css"
+        })
     ]
-  }
-};
+}
